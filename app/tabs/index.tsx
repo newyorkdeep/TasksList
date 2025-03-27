@@ -45,8 +45,8 @@ export default function Index() {
           {tasks.map(obj=>(
             <div key={obj.id}>
               <View style={styles.inline}>
-                <p>{obj.done==true? <Text style={{textDecorationLine: 'line-through'}}>✔{obj.name}</Text>: <Text>{obj.name}</Text>}</p>
-                  <Pressable style={styles.smallbuttons} onPress={()=> {
+                <p>{obj.done==true? <Text style={{textDecorationLine: 'line-through', fontSize: 19}}>✔{obj.name}</Text>: <Text style={{fontSize: 19}}>{obj.name}</Text>}</p>
+                  <Pressable style={styles.smallbuttons_alt} onPress={()=> {
                     reversethis(obj.id, obj.name, obj.done);
                   }}>{obj.done==true? <Text>Mark as undone</Text>: <Text>Mark as done</Text>}</Pressable>
                   <Pressable style={styles.smallbuttons} onPress={()=> {
@@ -67,11 +67,13 @@ export default function Index() {
           <Pressable style={styles.buttons} onPress={updateArray}>
             <Text>Add task</Text>
           </Pressable>
-          <Pressable onPress={popit} style={styles.buttons}>Delete all</Pressable> 
       </View>
+      <Pressable onPress={popit} style={{marginBottom: 3}}>Delete all tasks</Pressable>   
     </View>
   );
 }
+
+//styles:
 
 const styles = StyleSheet.create({
   container: {
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttons: {
-    borderRadius: 5,
+    borderRadius: 25,
     padding: 5,
     borderWidth: 1,
     justifyContent: "center",
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 20,
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 25,
   },
   smallbuttons: {
     borderRadius: 20,
@@ -98,6 +100,13 @@ const styles = StyleSheet.create({
     margin: 14,
     borderWidth: 1,
     borderColor: "red",
+  },
+  smallbuttons_alt:{
+    borderRadius: 20,
+    padding: 3,
+    margin: 14,
+    borderWidth: 1,
+    borderColor: "black",
   },
   inline: {
     justifyContent: "space-evenly",
