@@ -14,12 +14,18 @@ export default function Index() {
   const [newTask, setNewTask] = useState('');
   
   const updateArray = () => {
-    setTasks([...tasks, { id: Math.random()*1000000000, name: newTask, done: false}]);
-    setNewTask('');
+    if (newTask.length==0) {
+      alert('You forgot to enter the task');
+    }
+    else {
+      setTasks([...tasks, { id: Math.random()*1000000000, name: newTask, done: false}]);
+      setNewTask('');
+    }
   };
 
   const popit = () => {
     setTasks([]);
+    setNewTask('');
   };
 
   const deletethis = (index: number) => {
@@ -30,38 +36,39 @@ export default function Index() {
   const reversethis = (index: number, texting: string, isitdone: boolean) => {
     const bih=tasks.filter(item => item.id!=index);
     setTasks([...bih, { id: Math.random()*1000000000, name: texting, done: !isitdone}]);
-  }
+  };
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Add a new task"
-        value={newTask}
-        onChangeText={setNewTask}
-      />
-      <Pressable style={styles.buttons} onPress={updateArray}>
-        <Text>Add task</Text>
-      </Pressable>
       <ScrollView>
         <div>
           {tasks.map(obj=>(
             <div key={obj.id}>
-              <p>TASK: {obj.name}</p>
-              <p>STATUS: {obj.done==true? <Text>Done</Text>: <Text>Not done</Text>}</p>
-              <p>
-                <Pressable style={styles.smallbuttons} onPress={()=> {
-                  deletethis(obj.id);
+              <View style={styles.inline}>
+                <p>{obj.done==true? <Text style={{textDecorationLine: 'line-through'}}>✔{obj.name}</Text>: <Text>{obj.name}</Text>}</p>
+                  <Pressable style={styles.smallbuttons} onPress={()=> {
+                    reversethis(obj.id, obj.name, obj.done);
+                  }}>{obj.done==true? <Text>Mark as undone</Text>: <Text>Mark as done</Text>}</Pressable>
+                  <Pressable style={styles.smallbuttons} onPress={()=> {
+                    deletethis(obj.id);
                   }}>Delete</Pressable>
-                <Pressable style={styles.smallbuttons} onPress={()=> {
-                  reversethis(obj.id, obj.name, obj.done);
-                }}>Mark as done</Pressable>
-              </p>
-              </div>
+              </View>
+            </div>
           ))}
         </div>
       </ScrollView>
-      <Pressable onPress={popit} style={styles.buttons}>Delete all</Pressable>
+      <View style={styles.inline}>
+          <TextInput
+            style={styles.input}
+            placeholder="Add a new task"
+            value={newTask}
+            onChangeText={setNewTask}
+          />
+          <Pressable style={styles.buttons} onPress={updateArray}>
+            <Text>Add task</Text>
+          </Pressable>
+          <Pressable onPress={popit} style={styles.buttons}>Delete all</Pressable> 
+      </View>
     </View>
   );
 }
@@ -76,6 +83,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 5,
     borderWidth: 1,
+    justifyContent: "center",
+    margin: 10,
   },
   input: {
     margin: 10,
@@ -89,5 +98,10 @@ const styles = StyleSheet.create({
     margin: 14,
     borderWidth: 1,
     borderColor: "red",
+  },
+  inline: {
+    justifyContent: "space-evenly",
+    flexDirection: "row",
+    alignItems: "stretch"
   }
 })
