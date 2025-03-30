@@ -14,6 +14,11 @@ export default function TabLayout(){
                     <Ionicons name={focused? 'information-circle': 'information-circle-outline'} color={color} size={24} />
                 ),
             }} />
+            <Tabs.Screen name="nuke" options={{ title: 'Delete all', 
+                tabBarIcon: ({color, focused}) => (
+                    <Ionicons name={focused? 'trash': 'trash-outline'} color={color} size={24} />
+                ),
+            }} />
         </Tabs>
     );
 }

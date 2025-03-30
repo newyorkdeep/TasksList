@@ -1,6 +1,8 @@
 import { Text, View, StyleSheet, Button, TextInput, Pressable, ScrollView } from "react-native";
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 interface MyTask {
   id: number;
@@ -9,6 +11,26 @@ interface MyTask {
 }
 
 export default function Index() {
+
+  const storeData = async (value: string) => {
+    try {
+      await AsyncStorage.setItem('my-key', value);
+    } catch (e) {
+      // saving error
+    }
+  };
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('my-key');
+      if (value !== null) {
+        // value previously stored
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
+
   const [tasks, setTasks] = useState<MyTask[]>([]);
 
   const [newTask, setNewTask] = useState('');
@@ -20,6 +42,9 @@ export default function Index() {
     else {
       setTasks([...tasks, { id: Math.random()*1000000000, name: newTask, done: false}]);
       setNewTask('');
+      storeData("diojfiodesfjiodasfjioawe");
+      var abra=getData();
+      alert(abra);
     }
   };
 
@@ -35,7 +60,7 @@ export default function Index() {
   
   const reversethis = (index: number, texting: string, isitdone: boolean) => {
     const bih=tasks.filter(item => item.id!=index);
-    setTasks([...bih, { id: Math.random()*1000000000, name: texting, done: !isitdone}]);
+    setTasks([...bih, { id: index, name: texting, done: !isitdone}]);
   };
 
   return (
@@ -45,13 +70,13 @@ export default function Index() {
           {tasks.map(obj=>(
             <div key={obj.id}>
               <View style={styles.inline}>
-                <p>{obj.done==true? <Text style={{textDecorationLine: 'line-through', fontSize: 19}}>✔{obj.name}</Text>: <Text style={{fontSize: 19}}>{obj.name}</Text>}</p>
-                  <Pressable style={styles.smallbuttons_alt} onPress={()=> {
-                    reversethis(obj.id, obj.name, obj.done);
-                  }}>{obj.done==true? <Text>Mark as undone</Text>: <Text>Mark as done</Text>}</Pressable>
-                  <Pressable style={styles.smallbuttons} onPress={()=> {
-                    deletethis(obj.id);
-                  }}>Delete</Pressable>
+                <p>{obj.done==true? <Text style={{textDecorationLine: 'line-through', fontSize: 19}}>{obj.name}</Text>: <Text style={{fontSize: 19}}>{obj.name}</Text>}</p>
+                <Pressable style={styles.smallbuttons_alt} onPress={()=> {
+                  reversethis(obj.id, obj.name, obj.done);
+                }}>{obj.done==true? <Text>Mark as undone</Text>: <Text>Mark as done</Text>}</Pressable>
+                <Pressable style={styles.smallbuttons} onPress={()=> {
+                  deletethis(obj.id);
+                }}>Delete</Pressable>
               </View>
             </div>
           ))}
@@ -68,7 +93,6 @@ export default function Index() {
             <Text>Add task</Text>
           </Pressable>
       </View>
-      <Pressable onPress={popit} style={{marginBottom: 3}}>Delete all tasks</Pressable>   
     </View>
   );
 }
@@ -112,5 +136,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     flexDirection: "row",
     alignItems: "stretch"
+  },
+  nukebutton: {
+    
   }
 })
