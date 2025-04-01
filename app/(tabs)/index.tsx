@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet, Button, TextInput, Pressable, ScrollView} from "react-native";
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface MyTask {
   id: number;
@@ -10,7 +10,6 @@ interface MyTask {
 }
 
 export default function Index() {
-
   const [tasks, setTasks] = useState<MyTask[]>([]);
 
   const [newTask, setNewTask] = useState('');
@@ -22,6 +21,8 @@ export default function Index() {
     else {
       setTasks([...tasks, { id: Math.random()*1000000000, name: newTask, done: false}]);
       setNewTask('');
+      const a=AsyncStorage.getItem('username');
+      alert(a);
     }
   };
 
