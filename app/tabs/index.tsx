@@ -1,7 +1,8 @@
-import { Text, View, StyleSheet, Button, TextInput, Pressable, ScrollView } from "react-native";
+import { Text, View, StyleSheet, Button, TextInput, Pressable, ScrollView} from "react-native";
 import { Link } from 'expo-router';
-import React, { useState } from 'react';
-import * as SQLite from 'expo-sqlite';
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 interface MyTask {
   id: number;
@@ -10,10 +11,29 @@ interface MyTask {
 }
 
 export default function Index() {
-  const db = SQLite.openDatabaseAsync('taskdb');
+ 
+  const save = async() =>{
+    try {
+      AsyncStorage.setItem("thekey", "idjsfodsfioas");
+      
+    } catch (err) {
+      alert(err);
+    }
+  };
 
-  const [key1, onChangeKey] = useState('thekey');
-  const [value1, onChangeValue] = useState('thevalue');
+  const load= async() =>{
+    try {
+      let storedvalue = await AsyncStorage.getItem("the key");
+      setNewTask('');
+      alert(storedvalue);
+    } catch(err){
+      alert(err);
+    }
+  };
+
+  useEffect(()=>{
+    load();
+  }, []);
 
   const [tasks, setTasks] = useState<MyTask[]>([]);
 
@@ -25,7 +45,9 @@ export default function Index() {
     }
     else {
       setTasks([...tasks, { id: Math.random()*1000000000, name: newTask, done: false}]);
-      setNewTask('');
+      save();
+      //setNewTask('');
+      load();
     }
   };
 
