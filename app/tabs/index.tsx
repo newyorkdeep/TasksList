@@ -1,7 +1,8 @@
 import { Text, View, StyleSheet, Button, TextInput, Pressable, ScrollView} from "react-native";
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
-import * as SQLite from 'expo-sqlite';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 interface MyTask {
   id: number;
@@ -10,10 +11,25 @@ interface MyTask {
 }
 
 export default function Index() {
-  const db = SQLite.openDatabaseAsync('taskdb');
 
-  const [key1, onChangeKey] = useState('thekey');
-  const [value1, onChangeValue] = useState('thevalue');
+  const storeData = async (value: string) => {
+    try {
+      await AsyncStorage.setItem('my-key', value);
+    } catch (e) {
+      // saving error
+    }
+  };
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('my-key');
+      if (value !== null) {
+        // value previously stored
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
 
   const [tasks, setTasks] = useState<MyTask[]>([]);
 
@@ -26,6 +42,9 @@ export default function Index() {
     else {
       setTasks([...tasks, { id: Math.random()*1000000000, name: newTask, done: false}]);
       setNewTask('');
+      storeData("diojfiodesfjiodasfjioawe");
+      var abra=getData();
+      alert(abra);
     }
   };
 
