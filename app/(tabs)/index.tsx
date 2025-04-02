@@ -1,7 +1,7 @@
-import { Text, View, StyleSheet, Button, TextInput, Pressable, ScrollView} from "react-native";
+import { Text, View, StyleSheet, Button, TextInput, Pressable, ScrollView, Keyboard} from "react-native";
 import { Link } from 'expo-router';
-import React, { useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface MyTask {
   id: number;
@@ -10,36 +10,59 @@ interface MyTask {
 }
 
 export default function Index() {
+  
+  const asyncadd = async () => {
+    try {
+      if (newTask.length==0) {
+        alert('You forgot to enter the task!');
+      } else {
+        const a=[...tasks,{ id: Math.random()*1000000000, name: newTask, done: false}];
+        setTasks([...tasks, { id: Math.random()*1000000000, name: newTask, done: false}]);
+        await AsyncStorage.setItem('thekey', JSON.stringify(a));
+        setNewTask('');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const asyncdelete = async (index: number) => {
+    try {
+      const bih=tasks.filter(item => item.id!=index);
+      setTasks(bih);
+      await AsyncStorage.setItem('thekey', JSON.stringify(bih));
+    } catch(error) {
+      console.error(error);
+    }
+  };
+
+  const asyncmark = async (index: number, texting: string, isitdone: boolean) => {
+    try {
+      const bih=tasks.filter(item => item.id!=index);
+      setTasks([...bih, { id: index, name: texting, done: !isitdone}]);
+      await AsyncStorage.setItem('thekey', JSON.stringify([...bih, { id: index, name: texting, done: !isitdone}]));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchtsting = async () => {
+      try {
+        const storedinventory = await AsyncStorage.getItem('thekey');
+        if (storedinventory !== null) {
+          setTasks(JSON.parse(storedinventory));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchtsting();
+  }, []);
+
   const [tasks, setTasks] = useState<MyTask[]>([]);
-
+  
   const [newTask, setNewTask] = useState('');
-  
-  const updateArray = () => {
-    if (newTask.length==0) {
-      alert('You forgot to enter the task');
-    }
-    else {
-      setTasks([...tasks, { id: Math.random()*1000000000, name: newTask, done: false}]);
-      setNewTask('');
-      const a=AsyncStorage.getItem('username');
-      alert(a);
-    }
-  };
-
-  const popit = () => {
-    setTasks([]);
-    setNewTask('');
-  };
-
-  const deletethis = (index: number) => {
-    const bih=tasks.filter(item => item.id!=index);
-    setTasks(bih);
-  };
-  
-  const reversethis = (index: number, texting: string, isitdone: boolean) => {
-    const bih=tasks.filter(item => item.id!=index);
-    setTasks([...bih, { id: index, name: texting, done: !isitdone}]);
-  };
 
   return (
     <View style={styles.container}>
@@ -50,10 +73,10 @@ export default function Index() {
               <View style={styles.inline}>
                 <p>{obj.done==true? <Text style={{textDecorationLine: 'line-through', fontSize: 19}}>{obj.name}</Text>: <Text style={{fontSize: 19}}>{obj.name}</Text>}</p>
                 <Pressable style={styles.smallbuttons_alt} onPress={()=> {
-                  reversethis(obj.id, obj.name, obj.done);
+                  asyncmark(obj.id, obj.name, obj.done);
                 }}>{obj.done==true? <Text>Mark as undone</Text>: <Text>Mark as done</Text>}</Pressable>
                 <Pressable style={styles.smallbuttons} onPress={()=> {
-                  deletethis(obj.id);
+                  asyncdelete(obj.id);
                 }}>Delete</Pressable>
               </View>
             </div>
@@ -67,7 +90,7 @@ export default function Index() {
             value={newTask}
             onChangeText={setNewTask}
           />
-          <Pressable style={styles.buttons} onPress={updateArray}>
+          <Pressable style={styles.buttons} onPress={asyncadd}>
             <Text>Add task</Text>
           </Pressable>
       </View>

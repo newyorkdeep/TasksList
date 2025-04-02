@@ -1,6 +1,6 @@
 # Welcome to my pet project called TaskList 👋
 
-This is an [Expo](https://expo.dev) project created using Type Script and React Native.
+This is an [Expo](https://expo.dev) project created using Type Script, React Native and Async Storage to store the data.
 
 ## How to run the app:
 
