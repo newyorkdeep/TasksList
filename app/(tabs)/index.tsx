@@ -87,6 +87,7 @@ export default function Index() {
           <TextInput
             style={styles.input}
             placeholder="Add a new task"
+            onSubmitEditing={asyncadd}
             value={newTask}
             onChangeText={setNewTask}
           />
