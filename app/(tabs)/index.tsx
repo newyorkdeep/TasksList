@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet, Button, TextInput, Pressable, ScrollView, Keyboard, useColorScheme} from "react-native";
 import { Link } from 'expo-router';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import * as React from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface MyTask {
@@ -10,10 +11,10 @@ interface MyTask {
 }
 
 export default function Index() {
-  //
-  const colorScheme=useColorScheme;
-  const theme 
   
+  const colorScheme=useColorScheme();
+  const themeContainer = colorScheme === 'light'? styles.container : styles.darkcontainer;
+
   const asyncadd = async () => {
     try {
       if (newTask.length==0) {
@@ -50,16 +51,6 @@ export default function Index() {
       setTasks(bih);
       await AsyncStorage.setItem('thekey', JSON.stringify(bih));
     } catch(error) {
-      console.error(error);
-    }
-  };
-
-  const asyncmark = async (index: number, texting: string, isitdone: boolean) => {
-    try {
-      const bih=tasks.filter(item => item.id!=index);
-      setTasks([...bih, { id: index, name: texting, done: !isitdone}]);
-      await AsyncStorage.setItem('thekey', JSON.stringify([...bih, { id: index, name: texting, done: !isitdone}]));
-    } catch (error) {
       console.error(error);
     }
   };
@@ -111,7 +102,7 @@ export default function Index() {
       </View>
     </View>
   );
-}
+};
 
 //styles:
 
@@ -120,6 +111,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  darkcontainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "black",
   },
   buttons: {
     borderRadius: 25,

@@ -19,3 +19,5 @@ This is an [Expo](https://expo.dev) project created using Type Script, React Nat
 Enjoy :)
 
 If you have any questions or suggestions, feel free to text me via email: `mpp14021972@gmail.com`
+
+If you haven't installed EXPO on your machine check [this page](https://docs.expo.dev/bare/installing-expo-modules/) to learn how to do it.
