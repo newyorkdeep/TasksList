@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Button, TextInput, Pressable, ScrollView, Keyboard, useColorScheme} from "react-native";
+import { Text, View, StyleSheet, Button, TextInput, Pressable, ScrollView} from "react-native";
 import { Link } from 'expo-router';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,9 +10,6 @@ interface MyTask {
 }
 
 export default function Index() {
-  //
-  const colorScheme=useColorScheme;
-  const theme 
   
   const asyncadd = async () => {
     try {
