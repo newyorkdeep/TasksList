@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Button, TextInput, Pressable, ScrollView, Keyboard, useColorScheme} from "react-native";
+import { Text, View, StyleSheet, Button, TextInput, Pressable, ScrollView, Keyboard, useColorScheme, Appearance} from "react-native";
 import { Link } from 'expo-router';
 import { useState, useEffect } from 'react';
 import * as React from 'react';
@@ -11,9 +11,14 @@ interface MyTask {
 }
 
 export default function Index() {
+
+  const [tasks, setTasks] = useState<MyTask[]>([]);
   
-  const colorScheme=useColorScheme();
-  const themeContainer = colorScheme === 'light'? styles.container : styles.darkcontainer;
+  const [newTask, setNewTask] = useState('');
+
+  const [themeNow, setThemeNow]= useState("light");
+  
+  const themeContainer = themeNow === "dark"? styles.darkcontainer : styles.container;
 
   const asyncadd = async () => {
     try {
@@ -55,6 +60,14 @@ export default function Index() {
     }
   };
 
+  const changetheme = () => {
+    if (themeNow=="light") {
+      setThemeNow("dark");
+    } else {
+      setThemeNow("light");
+    }
+  };
+
   useEffect(() => { 
     const fetchtsting = async () => {
       try {
@@ -69,12 +82,8 @@ export default function Index() {
     fetchtsting();
   }, []);
 
-  const [tasks, setTasks] = useState<MyTask[]>([]);
-  
-  const [newTask, setNewTask] = useState('');
-
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, themeContainer]}>
       <ScrollView>
         <div>
           {tasks.map(obj=>(
@@ -99,6 +108,7 @@ export default function Index() {
           <Pressable style={styles.buttons} onPress={asyncadd}>
             <Text>Add task</Text>
           </Pressable>
+          <Pressable style={styles.smallbuttons} onPress={()=> {changetheme();}}>Change theme</Pressable>
       </View>
     </View>
   );
@@ -116,7 +126,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "black",
+    backgroundColor: "#6e6e6e",
+    color: "white",
   },
   buttons: {
     borderRadius: 25,
