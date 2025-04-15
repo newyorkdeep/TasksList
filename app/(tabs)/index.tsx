@@ -10,6 +10,9 @@ interface MyTask {
 }
 
 export default function Index() {
+  const [tasks, setTasks] = useState<MyTask[]>([]);
+  
+  const [newTask, setNewTask] = useState('');
   
   const asyncadd = async () => {
     try {
@@ -36,7 +39,7 @@ export default function Index() {
     }
   };
 
-  const testin = async (index: number) => {
+  const asyncmark = async (index: number) => {
     try {
       const bih=tasks.map(item => {
         if (item.id==index) {
@@ -47,16 +50,6 @@ export default function Index() {
       setTasks(bih);
       await AsyncStorage.setItem('thekey', JSON.stringify(bih));
     } catch(error) {
-      console.error(error);
-    }
-  };
-
-  const asyncmark = async (index: number, texting: string, isitdone: boolean) => {
-    try {
-      const bih=tasks.filter(item => item.id!=index);
-      setTasks([...bih, { id: index, name: texting, done: !isitdone}]);
-      await AsyncStorage.setItem('thekey', JSON.stringify([...bih, { id: index, name: texting, done: !isitdone}]));
-    } catch (error) {
       console.error(error);
     }
   };
@@ -75,10 +68,6 @@ export default function Index() {
     fetchtsting();
   }, []);
 
-  const [tasks, setTasks] = useState<MyTask[]>([]);
-  
-  const [newTask, setNewTask] = useState('');
-
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -87,7 +76,7 @@ export default function Index() {
             <div key={obj.id}>
               <View style={styles.inline}>
                 <p>{obj.done==true? <Text style={{textDecorationLine: 'line-through', fontSize: 19}}>{obj.name}</Text>: <Text style={{fontSize: 19}}>{obj.name}</Text>}</p>
-                <Pressable style={styles.smallbuttons_alt} onPress={()=> {testin(obj.id);}}>{obj.done==true? <Text>Undone</Text>:<Text>Done</Text>}</Pressable>
+                <Pressable style={styles.smallbuttons_alt} onPress={()=> {asyncmark(obj.id);}}>{obj.done==true? <Text>Undone</Text>:<Text>Done</Text>}</Pressable>
                 <Pressable style={styles.smallbuttons} onPress={()=> {asyncdelete(obj.id);}}>Delete</Pressable>
               </View>
             </div>
